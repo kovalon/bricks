@@ -1,8 +1,7 @@
-from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Building, Bricks
+from .models import Building
 from .serializaers import BuildingSerializer, BricksSerializer, StatSerializer
 
 
@@ -20,7 +19,7 @@ class BricksCreateView(APIView):
     """Создание записи о кирпичах"""
 
     def post(self, request, id):
-        building = Building.objects.get(id=id)
+        # building = Building.objects.get(id=id)
         bricks = BricksSerializer(data={'building': id, 'count': request.data['count']})
         if bricks.is_valid():
             bricks.save()
