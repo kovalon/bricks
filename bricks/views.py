@@ -6,20 +6,38 @@ from .serializaers import BuildingSerializer, BricksSerializer, StatSerializer
 
 
 class BuildingCreateView(APIView):
-    """Создание записи о здании"""
+    """Создание записи о здании
+        Формат ввода данных:
+        {
+            "address": "string",
+            "year": "string"
+        }
+    """
 
     def post(self, request):
-        building = BuildingSerializer(data=request.data)
-        if building.is_valid():
-            building.save()
+        if 'address' in request.data and 'year' in request.data:
+            building = BuildingSerializer(data=request.data)
+            if building.is_valid():
+                building.save()
+        else:
+            return Response({"error": "bad request"}, status=400)
         return Response(status=201)
 
 
 class BricksCreateView(APIView):
-    """Создание записи о кирпичах"""
+    """Создание записи о кирпичах
+        Формат ввода данных:
+        {
+            "count": "integer"
+        }
+    """
 
     def post(self, request, id):
-        # building = Building.objects.get(id=id)
+        building = Building.objects.get(id=id)
+        if not building:
+            return Response({"error": "building not found"}, status=404)
+        if 'count' not in request.data:
+            return Response({"error": "bad request"}, status=400)
         bricks = BricksSerializer(data={'building': id, 'count': request.data['count']})
         if bricks.is_valid():
             bricks.save()

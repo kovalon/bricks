@@ -15,6 +15,8 @@ class BuildingSerializer(serializers.ModelSerializer):
 class BricksSerializer(serializers.ModelSerializer):
     """Сериализатор для добавления кирпичей"""
 
+    count = serializers.IntegerField(required=True)
+
     class Meta:
         model = Bricks
         fields = "__all__"
